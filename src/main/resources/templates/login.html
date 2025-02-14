@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html  xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connexion</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+    <body class="bg-gray-100 flex justify-center items-center h-screen">
+        <header class="absolute inset-x-0 top-0 z-50">
+            <nav class="flex items-center justify-center p-6 lg:px-8" aria-label="Global">
+                <div class="flex items-center justify-center">
+                    <a href="/" class="-m-1.5 p-1.5">
+                        <span class="sr-only">
+                            My private note
+                        </span>
+                        <img class="h-8 w-auto" src="https://tailwindui.com/plus-assets/img/logos/mark.svg?color=indigo&shade=600" alt="">
+                    </a>
+                </div>
+            </nav>
+        </header>
+        <div class="bg-white p-8 rounded-lg shadow-lg w-96">
+                <h2 class="text-2xl font-bold text-center mb-4">
+                    Connexion
+                </h2>
+                <form th:action="@{/auth/login}" id="loginForm" method="post">
+                    <div class="mb-4">
+                        <label class="block text-gray-700">Nom d'utilisateur
+                        </label>
+                        <input type="text" id="username" name="username" required  class="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-gray-700">
+                            Mot de passe
+                        </label>
+                        <input type="password" id="password" name="password" required  class="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <p id="message"></p><!-- response Message  -->
+                    </div>
+                    <button type="submit" class="w-full bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-600">
+                        Se connecter
+                    </button>
+                </form>
+                <div class="mt-4">
+                    <a href="/oauth2/authorization/google" class="w-full flex items-center justify-center bg-red-500 text-white p-2 rounded-lg hover:bg-red-600">
+                        <svg class="w-5 h-5 mr-2" viewBox="0 0 48 48">
+                            <path fill="#EA4335" d="M24 20v8h11c-.6 3-3.6 8-11 8-6.6 0-12-5.4-12-12s5.4-12 12-12c3 0 5.4 1.2 7.2 2.6L35 9.8C32.4 7.4 28.8 6 24 6c-9.6 0-18 7.8-18 18s8.4 18 18 18c10.2 0 17-7.2 17-17 0-1.2-.2-2.2-.4-3H24z"/>
+                        </svg>
+                        Se connecter avec Google
+                    </a>
+                </div>
+                <!-- ✅ Lien vers l'inscription -->
+                <div class="mt-4 text-center">
+                    <p class="text-gray-700">
+                        Pas encore de compte ?
+                    </p>
+                    <a href="/inscription" class="text-blue-500 hover:underline">
+                        Inscrivez-vous ici
+                    </a>
+                </div>
+        </div>
+        <script src="/js/login.js"></script>
+    </body>
+</html>

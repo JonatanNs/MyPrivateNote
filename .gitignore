@@ -1,0 +1,79 @@
+HELP.md
+target/
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+### VS Code ###
+.vscode/
+
+# Fichiers de logs
+logs/
+*.log
+**/logs/
+**/*.log
+
+# Fichiers de configuration temporaires
+*.env
+.env.local
+.env.development
+.env.test
+.env.production
+*.properties.local
+application-*.yml
+
+# Dépendances de build
+.mvn/
+mvnw
+mvnw.cmd
+
+# Dossier de cache Maven
+.m2/
+
+# Binaires compilés
+*.class
+*.jar
+*.war
+*.ear
+
+# Fichiers temporaires
+*.tmp
+*.swp
+*.swo
+*.DS_Store
+Thumbs.db
+
+# Cache de l'IDE
+*.bak
+*.cache
+*.recommenders
+
+### SECRET ###
+application.properties
+application.yml
+
