@@ -50,8 +50,8 @@ document.getElementById("loginForm").addEventListener("submit", async function(e
             document.getElementById("password").value = "";
 
             setTimeout(() => {
-                window.location.href = "/";
-            }, 2000); //2s
+                window.location.href = "/mesNotes";
+            }, 1000); //1s
         }
         messageElement.textContent = message;
 

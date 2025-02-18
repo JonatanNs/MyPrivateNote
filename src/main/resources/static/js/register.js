@@ -63,7 +63,7 @@ function responseMessage(){
 
                 setTimeout(() => {
                     window.location.href = "/connexion";
-                }, 3000); //3s
+                }, 2000); //2s
             }
 
             messageElement.textContent = message;

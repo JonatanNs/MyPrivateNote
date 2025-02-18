@@ -26,18 +26,20 @@ public class SpringSecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth ->
                         auth.requestMatchers("/",
+                                                    "/accueil",
                                                     "/connexion",
                                                     "/inscription",
                                                     "/js/**",
                                                     "/auth/register" ,
-                                                    "/auth/login").permitAll()
+                                                    "/auth/login"
+                                                    ).permitAll()
                                 .anyRequest().authenticated())
                 .formLogin(login -> login
                         .loginPage("/connexion"))
 
                 .oauth2Login(oauth2 -> oauth2
                         .loginPage("/connexion")
-                        .defaultSuccessUrl("/", true) // Redirige après connexion OAuth2
+                        .defaultSuccessUrl("/mesNotes", true) // Redirige après connexion OAuth2
                 )
                 .build();
     }
