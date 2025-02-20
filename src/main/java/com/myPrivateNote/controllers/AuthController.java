@@ -1,13 +1,18 @@
 package com.myPrivateNote.controllers;
 
+import com.myPrivateNote.configurations.JwtUtils;
 import com.myPrivateNote.models.User;
 import com.myPrivateNote.repository.UserRepository;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -15,23 +20,25 @@ import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.oauth2.core.oidc.OidcIdToken;
-import org.springframework.security.oauth2.core.oidc.OidcUserInfo;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/auth")
+@Slf4j
 public class AuthController {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JwtUtils jwtUtils;
     private final AuthenticationManager authenticationManager;
     private final OAuth2AuthorizedClientService authorizedClientService;
 
@@ -58,17 +65,26 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> loginUser(@Valid @RequestBody User user){
-        try{
-            authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(
-                            user.getUsername(),
-                            user.getPassword()
-                    )
+    public ResponseEntity<Map<String, Object>> loginUser(@Valid @RequestBody User user) {
+        Map<String, Object> response = new HashMap<>();
+
+        try {
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword())
             );
-            return ResponseEntity.ok("Connexion réussie !");
-        } catch (AuthenticationException ex){
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Nom d'utilisateur ou mot de passe invalide.");
+
+            String token = jwtUtils.generateToken(user.getUsername());
+
+            response.put("token", token);
+            response.put("type", "Bearer");
+            response.put("message", "Connexion réussie");
+
+            return ResponseEntity.ok(response);
+        } catch (AuthenticationException ex) {
+            log.error("Erreur d'authentification : {}", ex.getMessage());
+
+            response.put("message", "Nom d'utilisateur ou mot de passe invalide.");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
         }
     }
 
@@ -76,12 +92,6 @@ public class AuthController {
     public String getUserInfo(Principal user,
                               @AuthenticationPrincipal OidcUser oidcUser,
                               Model model){
-        /*StringBuffer userInfo = new StringBuffer();
-        if(user instanceof UsernamePasswordAuthenticationToken){
-            userInfo.append(getUsernamePasswordLoginInfo(user));
-        } else if(user instanceof OAuth2AuthenticationToken){
-            userInfo.append(getOauth2LoginInfo(user, oidcUser));
-        }*/
         String userInfo = "";
 
         if (user instanceof UsernamePasswordAuthenticationToken) {

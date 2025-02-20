@@ -1,10 +1,12 @@
 package com.myPrivateNote.configurations;
 
+import com.myPrivateNote.filter.JwtFilter;
 import lombok.RequiredArgsConstructor;
 import com.myPrivateNote.services.CustomUserDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -12,6 +14,7 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -19,6 +22,7 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SpringSecurityConfig {
 
     private final CustomUserDetailsService userDetailsService;
+    private final JwtUtils jwtUtils;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
@@ -26,13 +30,13 @@ public class SpringSecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth ->
                         auth.requestMatchers("/",
-                                                    "/accueil",
-                                                    "/connexion",
-                                                    "/inscription",
-                                                    "/js/**",
-                                                    "/auth/register" ,
-                                                    "/auth/login"
-                                                    ).permitAll()
+                                        "/accueil",
+                                        "/connexion",
+                                        "/inscription",
+                                        "/js/**",
+                                        "/auth/register",
+                                        "/auth/login"
+                                ).permitAll()
                                 .anyRequest().authenticated())
                 .formLogin(login -> login
                         .loginPage("/connexion"))
@@ -41,6 +45,7 @@ public class SpringSecurityConfig {
                         .loginPage("/connexion")
                         .defaultSuccessUrl("/mesNotes", true) // Redirige après connexion OAuth2
                 )
+                .addFilterBefore(new JwtFilter(userDetailsService, jwtUtils), UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 
@@ -58,4 +63,3 @@ public class SpringSecurityConfig {
         return authenticationManagerBuilder.build();
     }
 }
-
