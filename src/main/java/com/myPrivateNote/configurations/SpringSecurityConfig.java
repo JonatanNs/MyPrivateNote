@@ -11,6 +11,7 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -23,6 +24,7 @@ public class SpringSecurityConfig {
 
     private final CustomUserDetailsService userDetailsService;
     private final JwtUtils jwtUtils;
+    private final JwtFilter jwtFilter;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
@@ -38,14 +40,12 @@ public class SpringSecurityConfig {
                                         "/auth/login"
                                 ).permitAll()
                                 .anyRequest().authenticated())
-                .formLogin(login -> login
-                        .loginPage("/connexion"))
-
                 .oauth2Login(oauth2 -> oauth2
                         .loginPage("/connexion")
-                        .defaultSuccessUrl("/mesNotes", true) // Redirige après connexion OAuth2
+                        .defaultSuccessUrl("/mesNotes", true)
                 )
-                .addFilterBefore(new JwtFilter(userDetailsService, jwtUtils), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
+                .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
                 .build();
     }
 

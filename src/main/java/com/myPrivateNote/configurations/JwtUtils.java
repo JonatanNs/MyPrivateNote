@@ -6,7 +6,6 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
-
 import javax.crypto.spec.SecretKeySpec;
 import java.security.Key;
 import java.util.Date;
@@ -42,10 +41,19 @@ public class JwtUtils {
         return new SecretKeySpec(keyBytes, SignatureAlgorithm.HS256.getJcaName());
     }
 
-    public Boolean validateToken(String token, UserDetails userDetails){
+    /*public Boolean validateToken(String token, UserDetails userDetails){
+        String username = extractUsername(token);
+        return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
+    }*/
+    public Boolean validateToken(String token, UserDetails userDetails) {
+        if (token == null || token.trim().isEmpty()) {
+            return false;
+        }
+
         String username = extractUsername(token);
         return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
     }
+
 
     private boolean isTokenExpired(String token) {
         return extractExpirationDate(token).before(new Date());
@@ -65,10 +73,10 @@ public class JwtUtils {
     }
 
     private Claims extractAllClaim(String token) {
-        return Jwts.parserBuilder() // ⚠️ Remplace parser() par parserBuilder()
+        return Jwts.parserBuilder()
                 .setSigningKey(getSignKey())
-                .build() // Ajoute .build() ici
-                .parseClaimsJws(token) // ✅ Correct pour un JWT signé
+                .build()
+                .parseClaimsJws(token)
                 .getBody();
     }
 }
