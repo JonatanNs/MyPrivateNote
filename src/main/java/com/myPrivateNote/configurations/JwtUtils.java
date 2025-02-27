@@ -41,10 +41,6 @@ public class JwtUtils {
         return new SecretKeySpec(keyBytes, SignatureAlgorithm.HS256.getJcaName());
     }
 
-    /*public Boolean validateToken(String token, UserDetails userDetails){
-        String username = extractUsername(token);
-        return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
-    }*/
     public Boolean validateToken(String token, UserDetails userDetails) {
         if (token == null || token.trim().isEmpty()) {
             return false;
