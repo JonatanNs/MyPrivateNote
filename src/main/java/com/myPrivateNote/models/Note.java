@@ -1,6 +1,7 @@
 package com.myPrivateNote.models;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import java.util.Date;
 
@@ -8,26 +9,23 @@ import java.util.Date;
 @Table(name = "notes")
 @Data
 public class Note {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id; // Utilisation de Long (au lieu de long)
+    private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false) // Clé étrangère vers l'utilisateur
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @Temporal(TemporalType.TIMESTAMP) // Spécifie que c'est une date/heure complète
+    @Temporal(TemporalType.TIMESTAMP)
     @Column(nullable = false, updatable = false)
-    private Date date = new Date(); // Date par défaut à la création
+    private Date date = new Date();
 
-    @Column(nullable = false, length = 100) // Limite la taille
-    private String category;
-
-    @Column(nullable = false, length = 255) // Un titre peut être plus long qu'une catégorie
+    @Column(nullable = false, length = 255)
     private String title;
 
     @Lob // Utilisé pour stocker de grandes chaînes de texte
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT")
+    @NotBlank(message = "La note ne doit pas être vide")
     private String note;
 }

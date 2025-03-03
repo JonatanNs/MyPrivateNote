@@ -1,14 +1,14 @@
 <!DOCTYPE html>
-<html lang="fr" xmlns:th="http://www.thymeleaf.org">
-    <head th:replace="fragments/head :: head"></head>
-    <body class="bg-gray-100 flex justify-center items-center h-screen">
-        <header th:replace="fragments/header :: header"
+<html lang="fr" xmlns:th="http://www.thymeleaf.org" class="h-full bg-white">
+    <head th:replace="~{fragments/head :: head}"></head>
+    <body>
+    <header th:replace="~{fragments/header :: header}"
                 class="absolute inset-x-0 top-0 z-50">
         </header>
-        <div class="bg-white p-8 rounded-lg shadow-lg w-96">
-                <h2 class="text-2xl font-bold text-center mb-4">
+        <main class="bg-white p-8 rounded-lg shadow-lg w-96 mx-auto mt-20 ">
+            <h2 class="text-2xl font-bold text-center mb-4">
                     Connexion
-                </h2>
+            </h2>
                 <form th:action="@{/auth/login}" id="loginForm" method="post">
                     <div class="mb-4">
                         <label class="block text-gray-700">
@@ -35,7 +35,7 @@
                         Se connecter avec Google
                     </a>
                 </div>
-                <!-- ✅ Lien vers l'inscription -->
+                <!--  Lien vers l'inscription -->
                 <div class="mt-4 text-center">
                     <p class="text-gray-700">
                         Pas encore de compte ?
@@ -44,7 +44,8 @@
                         Inscrivez-vous ici
                     </a>
                 </div>
-        </div>
+        </main>
         <script src="/js/login.js"></script>
     </body>
 </html>
+

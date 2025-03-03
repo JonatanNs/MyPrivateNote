@@ -1,0 +1,32 @@
+/* Applique le bon style aux polices */
+.ql-font-arial { font-family: Arial, sans-serif; }
+.ql-font-comic-sans { font-family: "Comic Sans MS", cursive, sans-serif; }
+.ql-font-courier-new { font-family: "Courier New", Courier, monospace; }
+.ql-font-georgia { font-family: Georgia, serif; }
+.ql-font-helvetica { font-family: Helvetica, sans-serif; }
+.ql-font-times-new-roman { font-family: "Times New Roman", Times, serif; }
+.ql-font-trebuchet-ms { font-family: "Trebuchet MS", sans-serif; }
+.ql-font-verdana { font-family: Verdana, sans-serif; }
+.ql-font-impact { font-family: Impact, sans-serif; }
+.ql-font-lucida-console { font-family: "Lucida Console", monospace; }
+.ql-font-monospace { font-family: monospace; }
+.ql-font-serif { font-family: serif; }
+.ql-font-sans-serif { font-family: sans-serif; }
+.ql-font-fantasy { font-family: fantasy; }
+.ql-font-cursive { font-family: cursive; }
+.ql-font-garamond { font-family: Garamond, serif; }
+.ql-font-tahoma { font-family: Tahoma, sans-serif; }
+.ql-font-brush-script-mt { font-family: "Brush Script MT", cursive; }
+.ql-font-calibri { font-family: Calibri, sans-serif; }
+.ql-font-cambria { font-family: Cambria, serif; }
+.ql-font-candara { font-family: Candara, sans-serif; }
+.ql-font-consolas { font-family: Consolas, monospace; }
+.ql-font-futura { font-family: Futura, sans-serif; }
+.ql-font-franklin-gothic { font-family: "Franklin Gothic Medium", sans-serif; }
+.ql-font-rockwell { font-family: Rockwell, serif; }
+
+.ql-picker.ql-font .ql-picker-label::before,
+.ql-picker.ql-font .ql-picker-item::before {
+    content: attr(data-value); /* Afficher uniquement le nom de la police */
+    font-family: inherit;
+}

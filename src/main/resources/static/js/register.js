@@ -26,53 +26,56 @@ function checkConfirmPassword() {
 }
 
 function responseMessage(){
-    document.getElementById("registerForm").addEventListener("submit", async function(event) {
-        event.preventDefault();
+    const registerForm = document.getElementById("registerForm");
+    if(registerForm){
+        registerForm.addEventListener("submit", async function(event) {
+            event.preventDefault();
 
-        const username = document.getElementById("username").value;
-        const email = document.getElementById("email").value;
-        const password = document.getElementById("password").value;
-        const messageElement = document.getElementById("message");
+            const username = document.getElementById("username").value;
+            const email = document.getElementById("email").value;
+            const password = document.getElementById("password").value;
+            const messageElement = document.getElementById("message");
 
-        try {
-            const response = await fetch("/auth/register", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ username, email, password })
-            });
+            try {
+                const response = await fetch("/auth/register", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ username, email, password })
+                });
 
-            const message = await response.text(); // Récupérer la réponse du backend
+                const message = await response.text(); // Récupérer la réponse du backend
 
-            if (!response.ok) {
-                    messageElement.style.color = "red";
+                if (!response.ok) {
+                        messageElement.style.color = "red";
+                        setTimeout(() => {
+                            messageElement.textContent = "";
+                        }, 3000); //3s
+                } else {
+                        messageElement.style.color = "green";
+
+                        setTimeout(() => {
+                            messageElement.textContent = "";
+                        }, 3000); //3s
+
+                    // Vider les champs du formulaire
+                    document.getElementById("username").value = "";
+                    document.getElementById("email").value = "";
+                    document.getElementById("password").value = "";
+                    document.getElementById("confirmPassword").value = "";
+
                     setTimeout(() => {
-                        messageElement.textContent = "";
-                    }, 3000); //3s
-            } else {
-                    messageElement.style.color = "green";
+                        window.location.href = "/connexion";
+                    }, 2000); //2s
+                }
 
-                    setTimeout(() => {
-                        messageElement.textContent = "";
-                    }, 3000); //3s
+                messageElement.textContent = message;
 
-                // Vider les champs du formulaire
-                document.getElementById("username").value = "";
-                document.getElementById("email").value = "";
-                document.getElementById("password").value = "";
-                document.getElementById("confirmPassword").value = "";
-
-                setTimeout(() => {
-                    window.location.href = "/connexion";
-                }, 2000); //2s
+            } catch (error) {
+                messageElement.textContent = "Erreur de connexion au serveur.";
+                messageElement.style.color = "red";
             }
-
-            messageElement.textContent = message;
-
-        } catch (error) {
-            messageElement.textContent = "Erreur de connexion au serveur.";
-            messageElement.style.color = "red";
-        }
-    });
+        });
+    }
 }
 
 document.addEventListener("DOMContentLoaded", function() {

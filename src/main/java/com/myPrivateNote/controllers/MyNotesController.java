@@ -11,6 +11,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,44 +27,56 @@ public class MyNotesController {
     private final NoteRepository noteRepository;
     private final PasswordEncoder passwordEncoder;
 
-    @GetMapping("/mesNotes")
+    @GetMapping("mesNotes")
     public String myNotes(Principal user,
                           @AuthenticationPrincipal OidcUser oidcUser,
                           Model model) {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
+        boolean isAuthenticated = authentication != null && authentication.isAuthenticated()
+                && !authentication.getPrincipal().equals("anonymousUser");
+
+        // Vérifier l'utilisateur s'est connecté via Google OAuth2
+        boolean isGoogleUser = isAuthenticated && authentication.getPrincipal() instanceof OAuth2User;
+        model.addAttribute("isGoogleUser", isGoogleUser);
+
         if (authentication == null || !authentication.isAuthenticated()) {
             System.out.println("Aucun utilisateur authentifié !");
             return "redirect:/connexion";
         }
 
-        String username = extractUsername(user);
-        String email = extractEmail(user);
-        String picture = extractPicture(user);
+        String usernameGoogle = extractUsername(user);
+        String emailGoogle = extractEmail(user);
+        String pictureGoogle = extractPicture(user);
 
-        // Vérifier si un utilisateur avec cet email existe déjà
-        User userLogin = (email != null) ? userRepository.findByEmail(email) : null;
+        // Vérifier si utilisateur avec cet email existe déjà
+        User userLogin = (emailGoogle != null)
+                ? userRepository.findByEmail(emailGoogle).orElse(null)
+                : null;
 
         if (userLogin == null) {
-            userLogin = userRepository.findByUsername(username);
+            userLogin = userRepository.findByUsername(usernameGoogle);
         }
 
         // Si aucun utilisateur n'existe, en créer un nouveau pour Google
-        if (userLogin == null && email != null) {
-            userLogin = createUser(username, email);
+        if (userLogin == null && emailGoogle != null) {
+            userLogin = createUser(usernameGoogle, emailGoogle, user);
         }
 
         if (userLogin != null) {
             model.addAttribute("name", userLogin.getUsername());
             model.addAttribute("email", userLogin.getEmail());
             model.addAttribute("notes", noteRepository.findByUser(userLogin));
+            model.addAttribute("picture", userLogin.getImgUser_url());
+            model.addAttribute("isAuthenticated", isAuthenticated);
         }
 
-        if (picture != null) {
-            model.addAttribute("pictureGoogle", picture);
+        if (pictureGoogle != null) {
+            model.addAttribute("pictureGoogle", pictureGoogle);
         }
-        return "mesNotes";
+
+        return "myNote/mesNotes";
     }
 
     // Extraction du nom d'utilisateur
@@ -79,7 +92,6 @@ public class MyNotesController {
         } else if (principal instanceof String) {
             return (String) principal;
         }
-
         return null;
     }
 
@@ -89,11 +101,10 @@ public class MyNotesController {
             Map<String, Object> userAttributes = oauthToken.getPrincipal().getAttributes();
             return (String) userAttributes.get("email");
         }
-
-        return null; // Si besoin, ajouter la gestion des emails pour les comptes locaux
+        return null;
     }
 
-    // Extraction de l'image de profil (Google OAuth)
+    // Extraction de image de profile (Google OAuth)
     private String extractPicture(Principal user) {
         if (user instanceof OAuth2AuthenticationToken oauthToken) {
             Map<String, Object> userAttributes = oauthToken.getPrincipal().getAttributes();
@@ -108,13 +119,16 @@ public class MyNotesController {
     }
 
     // Création d'un nouvel utilisateur Google
-    private User createUser(String username, String email) {
+    private User createUser(String username, String email, Principal user) {
         User newUser = new User();
 
         String randomPassword = generateRandomPassword();
+        String pictureGoogle = extractPicture(user);
+
         newUser.setPassword(passwordEncoder.encode(randomPassword));
         newUser.setUsername(username);
         newUser.setEmail(email);
+        newUser.setImgUser_url(pictureGoogle);
         newUser.setRole("ROLE_USER");
         return userRepository.save(newUser);
     }

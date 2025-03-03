@@ -30,13 +30,13 @@ public class SpringSecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth ->
                         auth.requestMatchers("/",
-                                        "/accueil",
                                         "/connexion",
                                         "/inscription",
                                         "/js/**",
+                                        "/img/**",
+                                        "/uploads/**",
                                         "/auth/register",
                                         "/auth/login"
-
                                 ).permitAll()
                                 .anyRequest().authenticated())
                 .oauth2Login(oauth2 -> oauth2

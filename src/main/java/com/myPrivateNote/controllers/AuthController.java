@@ -26,7 +26,6 @@ import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
 import java.security.Principal;
 import java.util.HashMap;
 import java.util.Map;
@@ -61,6 +60,9 @@ public class AuthController {
 
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setRole("ROLE_USER");
+        if(user.getImgUser_url() != null) {
+            user.setImgUser_url(user.getImgUser_url());
+        }
         userRepository.save(user);
 
         return ResponseEntity.ok("Utilisateur enregistré avec succès !");

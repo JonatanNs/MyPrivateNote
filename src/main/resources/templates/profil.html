@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head}"></head>
+<body>
+<header th:replace="~{fragments/header :: header}" class="absolute inset-x-0 top-0 z-50"></header>
+<main>
+    <a href="/mesNotes" class="bg-indigo-600 text-white py-3 px-6 rounded-lg hover:bg-indigo-500 transition text-lg absolute top-20 left-5" >
+        Retour
+    </a>
+    <div class="pt-10">
+        <h2 class="text-2xl font-bold text-center mb-4">
+            Mon profil
+        </h2>
+    </div>
+    <div class="bg-white p-8 rounded-lg shadow-lg w-96 mx-auto mt-20">
+        <h2 class="text-2xl font-bold text-center mb-4">
+            Modifier photo de profil
+        </h2>
+        <form th:action="@{/update-user-img}" id="formUpdateImg" enctype="multipart/form-data" method="POST">
+            <div class="flex flex-col-reverse justify-center p-2 w-32 m-auto">
+                <label for="fileImg" class="block text-center text-gray-700 cursor-pointer btn-primary p-2 bg-blue-500 text-white rounded-lg">
+                    Changer
+                    <input type="file" id="fileImg" name="fileImg" accept="image/*" required class="hidden">
+                </label>
+                <div class="mt-2 flex justify-center">
+                    <img id="imgPreview" class="w-22 h-22 rounded-full p-2" th:src="@{${picture != null ? picture : pictureGoogle}}" alt="Photo de profil">
+                    <p id="message"></p><!-- response Message  -->
+                </div>
+            </div>
+            <button type="submit" class="w-full bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-600">
+                Sauvegarder
+            </button>
+        </form>
+    </div>
+</main>
+<script src="/js/profil.js"></script>
+<script src="/js/logout.js"></script>
+</body>
+</html>
+
+
+

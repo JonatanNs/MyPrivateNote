@@ -21,46 +21,67 @@ function formLogin() {
     validateForm();
 }
 
-document.getElementById("loginForm").addEventListener("submit", async function(event) {
-    event.preventDefault();
+async function dataLogin() {
+    document.getElementById("loginForm").addEventListener("submit", async function (event) {
+        event.preventDefault();
 
-    const username = document.getElementById("username").value;
-    const password = document.getElementById("password").value;
-    const messageElement = document.getElementById("message");
+        const username = document.getElementById("username").value;
+        const password = document.getElementById("password").value;
+        const messageElement = document.getElementById("message");
 
-    try{
-        const response = await fetch("/auth/login", {
-            method : "POST",
-            headers :  { "Content-Type": "application/json" },
-            body : JSON.stringify({ username, password })
-        });
+        try {
+            const response = await fetch("/auth/login", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ username, password })
+            });
+            const data = await response.json().catch(() => {
+                throw new Error("Réponse du serveur invalide (non JSON).");
+            });
+            if (!response.ok) {
+                messageElement.style.color = "red";
+                messageElement.textContent = data.message;
+                setTimeout(() => { messageElement.textContent = ""; }, 2000);
+                return;
+            }
+            // Stocke le token
+            sessionStorage.setItem("token", data.token);
 
-        const message = await response.text();
-
-        if(!response.ok){
-            messageElement.style.color = "red";
-
-            setTimeout(() => {
-                messageElement.textContent = "";
-            }, 2000);
-        } else{
-            messageElement.style.color = "green";
+            if (!sessionStorage.getItem("token")) {
+                throw new Error("⚠️ Aucun token stocké !");
+            }
 
             document.getElementById("username").value = "";
             document.getElementById("password").value = "";
 
-            setTimeout(() => {
-                window.location.href = "/mesNotes";
-            }, 1000); //1s
-        }
-        messageElement.textContent = message;
+           fetch("/mesNotes", {
+                 method: "GET",
+                 headers: {
+                     "Authorization": "Bearer " + sessionStorage.getItem("token"),
+                     "Content-Type": "application/json"
+                 }
+             })
+             .then(response => {
+                 if (!response.ok) throw new Error("Accès refusé (403)");
+                 return response.text();
+             })
+             .then(data => {
+                 document.open();
+                 document.write(data);  // Remplace le contenu de la page avec la réponse
+                 document.close();
+             })
+             .catch(error => {
+                 alert("Erreur d'accès aux notes !");
+             });
 
-    } catch (error) {
-        messageElement.textContent = "Erreur de connexion au serveur.";
-        messageElement.style.color = "red";
-    }
-});
+        } catch (error) {
+            messageElement.textContent = "Erreur de connexion au serveur.";
+            messageElement.style.color = "red";
+        }
+    });
+}
 
 document.addEventListener("DOMContentLoaded", function(){
     formLogin();
+    dataLogin();
 });

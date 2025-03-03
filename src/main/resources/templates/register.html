@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="fr" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments/head :: head"></head>
-<body class="bg-gray-100 flex justify-center items-center h-screen">
-    <header th:replace="fragments/header :: header" class="absolute inset-x-0 top-0 z-50"></header>
-    <main class="bg-white p-8 rounded-lg shadow-lg w-96">
+<head th:replace="~{fragments/head :: head}"></head>
+<body>
+    <header th:replace="~{fragments/header :: header}" class="absolute inset-x-0 top-0 z-50"></header>
+    <main class="bg-white p-8 rounded-lg shadow-lg w-96 mx-auto mt-20 ">
         <h2 class="text-2xl font-bold text-center mb-4">
             Inscription
         </h2>

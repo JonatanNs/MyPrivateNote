@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head}"></head>
+<body>
+    <header th:replace="~{fragments/header :: header}" class="w-full bg-white shadow-md fixed top-0 left-0 z-50"></header>
+    <main class="relative isolate px-6 pt-14 lg:px-8 mt-20 w-full">
+        <a href="/mesNotes" class="bg-indigo-600 text-white py-3 px-6 rounded-lg hover:bg-indigo-500 transition text-lg">
+            Retour
+        </a>
+        <div class="bg-white p-8 shadow-xl rounded-lg w-full flex flex-col items-center">
+            <h1 class="text-3xl font-bold text-center mb-6">Éditeur de texte</h1>
+
+            <form th:action="@{/save-note}" method="POST" enctype="multipart/form-data"
+                  id="saveForm" class="w-full flex flex-col items-center">
+                <textarea name="note" id="hiddenNote" style="display: none;"></textarea>
+                <div id="editor" class="h-96 w-full max-w-3xl border border-gray-300 rounded-lg bg-white"></div>
+                <button type="submit" class="mt-6 w-full max-w-xs bg-indigo-600 text-white py-3 rounded-lg hover:bg-indigo-500 transition text-lg">
+                    Enregistrer
+                </button>
+            </form>
+        </div>
+    </main>
+<script src="https://cdn.jsdelivr.net/npm/quill@1.3.7/dist/quill.min.js"></script>
+<script src="/js/editorText.js"></script>
+<script src="/js/logout.js"></script>
+</body>
+</html>
