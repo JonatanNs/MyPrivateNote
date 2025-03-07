@@ -9,7 +9,6 @@
 - **Éditeur de texte riche avec Quill.js** : Utilisez un éditeur de texte WYSIWYG pour formater vos notes avec des options telles que gras, italique, souligné, liste, etc.
 - **Sécurité avec Spring Security** : Protection des données et des sessions utilisateur.
 - **UI réactive avec Tailwind CSS** : Interface moderne et responsive adaptée à tous les appareils.
-- **Gestion des images et vidéos** : Ajoutez des images et des vidéos dans vos notes, tout en conservant un formatage correct.
 
 ## Technologies utilisées
 
