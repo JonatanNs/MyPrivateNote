@@ -5,7 +5,9 @@
     <header th:replace="~{fragments/header :: header}" class="w-full bg-white shadow-md fixed top-0 left-0 z-50"></header>
     <main class="relative isolate px-6 pt-14 lg:px-8 mt-20 w-full">
         <div class="bg-white p-8 shadow-xl rounded-lg w-full flex flex-col items-center">
-            <h1 class="text-3xl font-bold text-center mb-6 text-gray-800">Contenu enregistré</h1>
+            <h1 class="text-3xl font-bold text-center mb-6 text-gray-800">
+                Contenu enregistré
+            </h1>
             <h2 th:text="${note.title}"></h2>
             <div th:utext="${note.note}" id="content" class="border border-gray-300 p-6 rounded-lg bg-gray-50 min-h-[300px]"></div>
 

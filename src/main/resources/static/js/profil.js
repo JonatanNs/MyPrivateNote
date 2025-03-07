@@ -6,7 +6,6 @@ async function updateImg(){
         formUpdateImg.addEventListener("submit", async function(event){
             event.preventDefault();
 
-            const password = document.querySelector("input[name='password']").value;
             const fileInput = document.getElementById("fileImg");
 
             // Vérifier si un fichier est sélectionné
@@ -19,7 +18,6 @@ async function updateImg(){
 
             // Utilisation de FormData pour envoyer un fichier
             const formData = new FormData();
-            formData.append("password", password);
             formData.append("fileImg", file);
 
             try{

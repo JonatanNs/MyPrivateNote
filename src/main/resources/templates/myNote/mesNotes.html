@@ -29,9 +29,7 @@
                                     <span class="absolute inset-0"></span>
                                     <span th:text="${note.title}">Titre de la note</span>
                                 </h3>
-                                <p class="mt-5 line-clamp-3 text-sm/6 text-gray-600 ">
-                                    <span th:utext="${note.note}">Contenu de la note</span>
-                                </p>
+                                <p id="note-preview" class="mt-5 line-clamp-3 text-sm/6 text-gray-600"></p>
                             </div>
                             <div class="relative mt-8 flex items-center gap-x-4">
                                 <img  th:src="@{${picture != null ? picture : pictureGoogle}}" alt="Photo de profil" class="size-10 rounded-full bg-gray-50">

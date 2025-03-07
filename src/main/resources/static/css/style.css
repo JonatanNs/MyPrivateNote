@@ -1,3 +1,50 @@
+a {
+    color: #1D4ED8;
+    text-decoration: underline;
+    font-weight: 500;
+}
+
+a:hover {
+    color: #2563EB;
+}
+
+/* Réinitialisation pour Quill */
+.ql-editor {
+    font-family: "Arial", sans-serif;
+    font-size: 1rem;
+    line-height: 1.5;
+}
+
+/* Supprimer l'alignement "justify" des éléments Quill */
+.ql-align-justify {
+    text-align: left !important;
+}
+
+/* Style général de l'éditeur */
+#editor {
+    background: #fdfdfd;
+    border-radius: 10px;
+    padding: 10px;
+    min-height: 200px;
+    font-size: 1,6rem;
+    line-height: 1.6;
+    border: 1px solid #ddd;
+}
+
+/* Amélioration de la barre d'outils */
+.ql-toolbar {
+    background: #f5f5f5;
+    border-radius: 10px 10px 0 0;
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+}
+
+/* Rendre la sélection des polices plus réaliste */
+.ql-font .ql-picker-item,
+.ql-font .ql-picker-label {
+    font-family: inherit;
+}
+
 /* Applique le bon style aux polices */
 .ql-font-arial { font-family: Arial, sans-serif; }
 .ql-font-comic-sans { font-family: "Comic Sans MS", cursive, sans-serif; }
@@ -27,6 +74,53 @@
 
 .ql-picker.ql-font .ql-picker-label::before,
 .ql-picker.ql-font .ql-picker-item::before {
-    content: attr(data-value); /* Afficher uniquement le nom de la police */
-    font-family: inherit;
+    content: attr(data-value);
 }
+
+.ql-editor.ql-blank::before {
+    color: #999;
+    font-style: italic;
+}
+
+.ql-editor {
+    font-family: 'Arial', sans-serif;
+}
+
+.ql-editor p {
+    max-width: 90%;
+    margin: 0 auto;
+    text-align: justify;
+}
+
+#note{
+    width: 80%;
+}
+
+#content img {
+    max-width: 60%;
+    height: auto;
+    display: block;
+    margin: 10px auto;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+#content iframe,
+#content video {
+    max-width: 70% ;
+    height: auto;
+    display: block;
+    margin: 10px auto;
+    border-radius: 25px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+#content h1, #content h2, #content h3, #content h4, #content h5, #content h6 {
+    font-size: revert !important;
+    font-weight: revert !important;
+    margin: 0;
+    padding: 0;
+    line-height: normal;
+    text-align: revert;
+}
+

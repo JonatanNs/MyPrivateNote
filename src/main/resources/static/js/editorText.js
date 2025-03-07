@@ -1,6 +1,6 @@
 
-function saveNote(){
-// Vérifie si l'éditeur existe dans la page avant de l'initialiser
+function saveNote() {
+    // Vérifie si l'éditeur existe dans la page avant de l'initialiser
     const editorElement = document.getElementById("editor");
     if (!editorElement) {
         console.error("Erreur : L'élément #editor n'existe pas !");
@@ -8,57 +8,105 @@ function saveNote(){
     }
 
     // Initialisation de Quill
-       const Font = Quill.import('formats/font');
+    const Font = Quill.import('formats/font');
+    const Delta = Quill.import('delta');
 
-       // Définition d'une liste de polices avec leur nom correct
-       Font.whitelist = [
-           'arial', 'comic-sans', 'courier-new', 'georgia', 'helvetica', 'times-new-roman', 'trebuchet-ms', 'verdana',
-           'impact', 'lucida-console', 'monospace', 'serif', 'sans-serif', 'fantasy', 'cursive', 'garamond', 'tahoma',
-           'brush-script-mt', 'calibri', 'cambria', 'candara', 'consolas', 'futura', 'franklin-gothic', 'rockwell'
-       ];
-       Quill.register(Font, true);
+    Font.whitelist = [
+        'arial', 'comic-sans', 'courier-new', 'georgia', 'helvetica', 'times-new-roman', 'trebuchet-ms', 'verdana',
+        'impact', 'lucida-console', 'monospace', 'serif', 'sans-serif', 'fantasy', 'cursive', 'garamond', 'tahoma',
+        'brush-script-mt', 'calibri', 'cambria', 'candara', 'consolas', 'futura', 'franklin-gothic', 'rockwell'
+    ];
+    Quill.register(Font, true);
 
-       const quill = new Quill('#editor', {
-           modules: {
-               toolbar: [
-                   [{ header: [1, 2, 3, 4, 5, 6, false] }],
-                   [{ font: Font.whitelist.map(font => font) }], // Utilise la liste des polices
-                   [{ size: ['small', false, 'large', 'huge'] }],
-                   [{ color: [] }, { background: [] }],
-                   ['bold', 'italic', 'underline', 'strike'],
-                   [{ script: 'sub' }, { script: 'super' }],
-                   [{ blockquote: true }, { code: true }],
-                   [{ list: 'ordered' }, { list: 'bullet' }],
-                   [{ indent: '-1' }, { indent: '+1' }],
-                   [{ align: [] }],
-                   ['link', 'image', 'video'],
-                   ['clean']
-               ]
-           },
-           placeholder: 'Rédigez votre texte ici...',
-           theme: 'snow',
-       });
+    const quill = new Quill('#editor', {
+        modules: {
+            toolbar: [
+                [{ header: [1, 2, 3, 4, 5, 6, false] }],
+                [{ font: Font.whitelist.map(font => font) }],
+                [{ size: ['small', false, 'large', 'huge'] }],
+                [{ color: [] }, { background: [] }],
+                ['bold', 'italic', 'underline', 'strike'],
+                [{ script: 'sub' }, { script: 'super' }],
+                [{ blockquote: true }, { code: true }],
+                [{ list: 'ordered' }, { list: 'bullet' }],
+                [{ indent: '-1' }, { indent: '+1' }],
+                [{ align: [] }],
+                ['link', 'image', 'video'],
+                ['clean']
+            ],
+            clipboard: {
+                matchers: [
+                    ['img', (node, delta) => {
+                        node.setAttribute('target', '_blank');
+                        return delta;
+                    }]
+                ]
+            }
+        },
+        placeholder: 'Rédigez votre texte ici...',
+        theme: 'snow',
+    });
 
-       document.querySelectorAll('.ql-font .ql-picker-item, .ql-font .ql-picker-label').forEach(item => {
-           const fontName = item.getAttribute('data-value');
-           if (fontName) {
-               item.style.fontFamily = fontName;
-           }
-       });
+    quill.on('text-change', function(delta, oldDelta, source) {
+        const editorElement = document.querySelector('#editor');
+        if (editorElement && editorElement.classList.contains('ql-editor')) {
+            editorElement.classList.remove('ql-editor');
+        }
+    });
+
+    // Intercepter l'ajout de classes d'alignement pour les titres
+    quill.on('text-change', function (delta, oldDelta, source) {
+        const headerElements = document.querySelectorAll('#editor h1, #editor h2, #editor h3, #editor h4, #editor h5, #editor h6');
+        headerElements.forEach(header => {
+            // Supprimer la classe ql-align-justify des titres
+            header.classList.remove('ql-align-justify');
+        });
+    });
+
+    // Limite la taille des images
+    quill.clipboard.addMatcher('img', (node, delta) => {
+        let imageUrl = delta.ops[0].insert.image;
+        return new Delta().insert({ image: imageUrl });
+    });
+
+    // Limite la taille des vidéos
+    quill.clipboard.addMatcher('iframe', (node, delta) => {
+        let videoUrl = delta.ops[0].insert.video;
+        return new Delta().insert({ video: videoUrl });
+    });
+
+    // Applique les polices aux sélecteurs
+    document.querySelectorAll('.ql-font .ql-picker-item, .ql-font .ql-picker-label').forEach(item => {
+        const fontName = item.getAttribute('data-value');
+        if (fontName) {
+            item.style.fontFamily = fontName;
+        }
+    });
 
     const form = document.getElementById("saveForm");
     const hiddenInput = document.getElementById("hiddenNote");
-    if(form){
-        form.addEventListener("submit", async function(event) {
+    const previewElement = document.getElementById("note-preview");
+
+    if (form) {
+        form.addEventListener("submit", async function (event) {
             event.preventDefault();
 
-            hiddenInput.value = quill.root.innerHTML; // Récupérer le contenu de Quill
-             console.log("Contenu envoyé :", hiddenInput.value);
+            const fullContent = quill.root.innerHTML;
+
+            hiddenInput.value = fullContent;
+            console.log("Contenu envoyé :", hiddenInput.value);
+
+            // Affiche l'aperçu sans images avant d'envoyer la requête
+            if (previewElement) {
+                previewElement.innerHTML = previewContent;
+            }
+
             const response = await fetch("/save-note", {
                 method: "POST",
                 headers: { "Content-Type": "application/x-www-form-urlencoded" },
                 body: new URLSearchParams({ note: hiddenInput.value })
             });
+
             if (!response.ok) {
                 console.error("Erreur lors de l'enregistrement de la note");
                 return;
