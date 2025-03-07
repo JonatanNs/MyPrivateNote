@@ -2,7 +2,6 @@ package com.myPrivateNote.controllers;
 
 import com.myPrivateNote.models.Note;
 import com.myPrivateNote.repository.NoteRepository;
-import com.myPrivateNote.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

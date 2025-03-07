@@ -42,7 +42,6 @@ public class MyNotesController {
         model.addAttribute("isGoogleUser", isGoogleUser);
 
         if (authentication == null || !authentication.isAuthenticated()) {
-            System.out.println("Aucun utilisateur authentifié !");
             return "redirect:/connexion";
         }
 

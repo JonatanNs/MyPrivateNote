@@ -4,13 +4,33 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.safety.Safelist;
+import org.jsoup.select.Elements;
 import java.util.ArrayList;
 import java.util.List;
 
 public class NoteUtils {
 
     public static String sanitizeHtml(String contentHtml) {
-        return Jsoup.clean(contentHtml, Safelist.relaxed().addTags("iframe", "video").addAttributes("iframe", "src"));
+        Safelist safelist = Safelist.relaxed()
+                .addTags("iframe", "video", "img", "a")  // Ajout de la balise <a>
+                .addAttributes("iframe", "src", "allowfullscreen", "frameborder")
+                .addAttributes("video", "controls", "autoplay")
+                .addAttributes("img", "src", "alt", "width", "height", "style")
+                .addAttributes("a", "href", "target")
+                .addAttributes(":all", "class", "style")
+                .preserveRelativeLinks(true)
+                .addProtocols("img", "src", "http", "https", "data");
+
+        // Nettoyage du HTML
+        String result = Jsoup.clean(contentHtml, safelist);
+
+        // Ajouter target="_blank" aux liens
+        Document doc = Jsoup.parse(result);
+        for (Element link : doc.select("a[href]")) {
+            link.attr("target", "_blank");
+        }
+
+        return doc.html();
     }
 
     public static String extractTitle(String contentHtml) {
@@ -51,13 +71,34 @@ public class NoteUtils {
         Document doc = Jsoup.parse(contentHtml);
         List<String> videos = new ArrayList<>();
         for (Element video : doc.select("iframe, video")) {
-            videos.add(video.attr("src"));  // Récupère les URLs des vidéos
+            videos.add(video.attr("src"));// Récupère les URLs des vidéos
         }
         return videos;
+    }
+
+    public static List<String> extractImages(String html) {
+        List<String> images = new ArrayList<>();
+        Document doc = Jsoup.parse(html);  // Analyse le contenu HTML
+        Elements imgTags = doc.select("img");  // Sélectionne toutes les balises <img>
+
+        for (Element img : imgTags) {
+            String src = img.attr("src");  // Récupère l'attribut src de l'image
+            if (!src.isBlank()) {
+                images.add(src);  // Ajoute l'URL de l'image dans la liste
+            }
+        }
+        return images;
     }
 
     public static boolean containsCode(String contentHtml) {
         Document doc = Jsoup.parse(contentHtml);
         return !doc.select("pre, code").isEmpty();  // Vérifie la présence de <pre> ou <code>
+    }
+
+    public static String removeImages(String htmlContent) {
+        if (htmlContent == null) {
+            return "";
+        }
+        return htmlContent.replaceAll("<img[^>]*>", ""); // Supprime toutes les balises <img>
     }
 }
