@@ -67,38 +67,8 @@ public class NoteUtils {
         return links;
     }
 
-    public static List<String> extractVideos(String contentHtml) {
-        Document doc = Jsoup.parse(contentHtml);
-        List<String> videos = new ArrayList<>();
-        for (Element video : doc.select("iframe, video")) {
-            videos.add(video.attr("src"));// Récupère les URLs des vidéos
-        }
-        return videos;
-    }
-
-    public static List<String> extractImages(String html) {
-        List<String> images = new ArrayList<>();
-        Document doc = Jsoup.parse(html);  // Analyse le contenu HTML
-        Elements imgTags = doc.select("img");  // Sélectionne toutes les balises <img>
-
-        for (Element img : imgTags) {
-            String src = img.attr("src");  // Récupère l'attribut src de l'image
-            if (!src.isBlank()) {
-                images.add(src);  // Ajoute l'URL de l'image dans la liste
-            }
-        }
-        return images;
-    }
-
     public static boolean containsCode(String contentHtml) {
         Document doc = Jsoup.parse(contentHtml);
         return !doc.select("pre, code").isEmpty();  // Vérifie la présence de <pre> ou <code>
-    }
-
-    public static String removeImages(String htmlContent) {
-        if (htmlContent == null) {
-            return "";
-        }
-        return htmlContent.replaceAll("<img[^>]*>", ""); // Supprime toutes les balises <img>
     }
 }

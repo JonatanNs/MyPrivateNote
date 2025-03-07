@@ -4,44 +4,44 @@
 <body>
 <header th:replace="~{fragments/header :: header}" class="w-full bg-white shadow-md fixed top-0 left-0 z-50"></header>
 <main class="relative isolate px-6 pt-14 lg:px-8 mt-20 w-full">
-  <a href="/mesNotes" class="bg-indigo-600 text-white py-3 px-6 rounded-lg hover:bg-indigo-500 transition text-lg">
-    Retour
-  </a>
-  <div class="bg-white p-8 shadow-xl rounded-lg w-full flex flex-col items-center">
-<!--    Formulaire pour modifier la note -->
-    <form th:action="@{/update-note}" method="POST" enctype="multipart/form-data" id="saveFormUpdate" class="w-full flex flex-col items-center hidden">
-      <input type="hidden" name="note_id" th:value="${note.id}">
-      <input type="hidden" name="content" id="contentUpdate">
-      <div th:utext="${note.note}" id="editor" class="h-96 w-full max-w-3xl border border-gray-300 rounded-lg bg-white"></div>
-      <button type="submit" class="mt-6 w-full max-w-xs bg-indigo-600 text-white py-3 rounded-lg hover:bg-indigo-500 transition text-lg">
-        Enregistrer
-      </button>
-    </form>
+    <a href="/mesNotes" class="bg-indigo-600 text-white py-3 px-6 rounded-lg hover:bg-indigo-500 transition text-lg">
+        Retour
+    </a>
+    <div class="bg-white p-8 rounded-lg w-full flex flex-col items-center">
+        <!--    Formulaire pour modifier la note -->
+        <form th:action="@{/update-note}" method="POST" enctype="multipart/form-data" id="saveFormUpdate" class="w-full flex flex-col items-center hidden">
+            <input type="hidden" name="note_id" th:value="${note.id}">
+            <input type="hidden" name="content" id="contentUpdate">
+            <div th:utext="${note.note}" id="editor" class="h-96 w-full max-w-3xl border border-gray-300 rounded-lg bg-white"></div>
+            <button type="submit" class="mt-6 w-full max-w-xs bg-indigo-600 text-white py-3 rounded-lg hover:bg-indigo-500 transition text-lg">
+                Enregistrer
+            </button>
+        </form>
 
-    <p id="message"></p><!-- response Message  -->
-    <div id="note">
-      <h1 th:text="${note.title}" class="text-3xl font-bold text-center mb-6 text-gray-800" ></h1>
-      <div th:utext="${note.note}" id="content" class="border border-gray-300 p-6 rounded-lg bg-gray-50 min-h-[300px]"></div>
-    </div>
+        <p id="message"></p><!-- response Message  -->
+        <div id="note">
+            <h1 th:text="${note.title}" class="text-3xl font-bold text-center mb-6 text-gray-800" ></h1>
+            <!-- Ajouter une classe dynamique pour s'adapter au contenu -->
+            <div th:utext="${note.note}" id="content" class="border border-gray-300 p-6 rounded-lg bg-gray-50 note-content"></div>
+        </div>
 
-    <div class="mt-6 flex justify-center">
-      <button id="updateNote" class="bg-indigo-600 text-white py-3 px-6 rounded-lg hover:bg-indigo-500 transition text-lg ">
-        Modifier
-      </button>
-      <!--    Formulaire pour supprimer la note -->
-      <form th:action="@{/delete-note}" method="POST"
-            id="deleteNote" class="w-full flex flex-col items-center">
-        <input type="hidden" name="id" th:value="${note.id}" />
-        <button class="bg-indigo-600 text-white py-3 px-6 rounded-lg hover:bg-indigo-500 transition text-lg">
-          Supprimer note
-        </button>
-      </form>
+        <div class="mt-6 flex justify-center">
+            <button id="updateNote" class="bg-indigo-600 text-white py-3 px-6 rounded-lg hover:bg-indigo-500 transition text-lg ">
+                Modifier
+            </button>
+            <!--    Formulaire pour supprimer la note -->
+            <form th:action="@{/delete-note}" method="POST"
+                  id="deleteNote" class="w-full flex flex-col items-center">
+                <input type="hidden" name="id" th:value="${note.id}" />
+                <button class="bg-indigo-600 text-white py-3 px-6 rounded-lg hover:bg-indigo-500 transition text-lg">
+                    Supprimer note
+                </button>
+            </form>
+        </div>
     </div>
-  </div>
 </main>
 <script src="/js/editorText.js"></script>
 <script src="/js/logout.js"></script>
 </body>
 </html>
-
 

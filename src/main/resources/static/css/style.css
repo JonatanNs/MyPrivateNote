@@ -8,18 +8,6 @@ a:hover {
     color: #2563EB;
 }
 
-/* Réinitialisation pour Quill */
-.ql-editor {
-    font-family: "Arial", sans-serif;
-    font-size: 1rem;
-    line-height: 1.5;
-}
-
-/* Supprimer l'alignement "justify" des éléments Quill */
-.ql-align-justify {
-    text-align: left !important;
-}
-
 /* Style général de l'éditeur */
 #editor {
     background: #fdfdfd;
@@ -84,6 +72,7 @@ a:hover {
 
 .ql-editor {
     font-family: 'Arial', sans-serif;
+    white-space: revert !important;
 }
 
 .ql-editor p {
@@ -96,31 +85,23 @@ a:hover {
     width: 80%;
 }
 
-#content img {
-    max-width: 60%;
-    height: auto;
-    display: block;
-    margin: 10px auto;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-}
-
-#content iframe,
-#content video {
-    max-width: 70% ;
-    height: auto;
-    display: block;
-    margin: 10px auto;
-    border-radius: 25px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-}
-
 #content h1, #content h2, #content h3, #content h4, #content h5, #content h6 {
     font-size: revert !important;
     font-weight: revert !important;
     margin: 0;
     padding: 0;
     line-height: normal;
-    text-align: revert;
+}
+
+.note-content {
+  min-height: 300px; /* Hauteur minimale pour le bloc */
+  max-width: 100%; /* Pour s'assurer que le contenu ne dépasse pas les bords */
+  overflow-wrap: break-word; /* Casser les mots longs pour éviter de déborder */
+}
+
+.note-content p {
+  margin: 0;
+  padding: 0;
+  white-space: pre-wrap; /* Permet de conserver les retours à la ligne dans le texte */
 }
 
