@@ -2,6 +2,11 @@
 
 **MyPrivateNote** est une application web permettant aux utilisateurs d'écrire, modifier et gérer leurs propres notes de manière sécurisée. L'application offre un système d'authentification via Google et dispose d'une interface de rédaction de texte riche grâce à Quill.js.
 
+<div align="center">
+  <img src="images/screenshot_1.png" alt="Mon site 1" width="80%" style="display: block; margin: 0 auto;">
+  <img src="images/screenshot_2.png" alt="Mon site 2" width="80%" style="display: block; margin: 0 auto;">
+</div>
+
 ## Fonctionnalités
 
 - **Connexion via Google** : Inscrivez-vous ou connectez-vous en utilisant votre compte Google pour un accès rapide et sécurisé.
